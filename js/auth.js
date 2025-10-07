@@ -2,8 +2,8 @@
 class AuthManager {
     constructor() {
         this.demoAccounts = {
-            'admin@surautrack.com': {
-                password: 'password123',
+            'admin': {
+                password: '123',
                 role: 'admin',
                 name: 'Pentadbir Sistem'
             },

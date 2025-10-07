@@ -2,13 +2,13 @@
 class AuthManager {
     constructor() {
         this.demoAccounts = {
-            'admin@surautrack.com': {
-                password: 'password123',
+            'admin': {
+                password: '123',
                 role: 'admin',
                 name: 'Pentadbir Sistem'
             },
-            'warden@surautrack.com': {
-                password: 'password123', 
+            'warden': {
+                password: '123', 
                 role: 'warden',
                 name: 'Warden Surau'
             }
@@ -187,11 +187,11 @@ function demoLogin(role) {
     let email, password;
 
     if (role === 'admin') {
-        email = 'admin@surautrack.com';
-        password = 'password123';
+        email = 'admin';
+        password = '123';
     } else if (role === 'warden') {
-        email = 'warden@surautrack.com';
-        password = 'password123';
+        email = 'warden';
+        password = '123';
     }
 
     document.getElementById('email').value = email;

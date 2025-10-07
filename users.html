@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengurusan Pengguna - SurauTrack</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="assets/icon.png">
+    <style>
+        .user-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        
+        .btn-edit {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .btn-delete {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-reset {
+            background: #FF9800;
+            color: white;
+        }
+        
+        .role-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .role-admin {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+        
+        .role-imam {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        
+        .role-ajk {
+            background: #FFF3E0;
+            color: #EF6C00;
+        }
+        
+        .role-user {
+            background: #F5F5F5;
+            color: #757575;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #757575;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-btn.active {
+            border-bottom-color: #2E7D32;
+            color: #2E7D32;
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .permission-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #F5F5F5;
+            border-radius: 8px;
+        }
+        
+        .permission-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .permission-item:last-child {
+            border-bottom: none;
+        }
+        
+        .log-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        
+        .log-item:last-child {
+            border-bottom: none;
+        }
+        
+        .log-time {
+            font-size: 12px;
+            color: #757575;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="assets/logo.png" alt="SurauTrack" class="header-logo">
+            <h1>Pengurusan Pengguna</h1>
+        </div>
+       <nav>
+    <a href="index.html" class="nav-link">🏠 Utama</a>
+    <a href="attendance.html" class="nav-link">📊 Kehadiran</a>
+    <a href="settings.html" class="nav-link">⚙️ Tetapan</a>  <!-- GANTI WAKTU SOLAT DENGAN TETAPAN -->
+    <a href="booking.html" class="nav-link">📅 Tempahan</a>
+    <a href="users.html" class="nav-link">👥 Pengguna</a>
+</nav>
+    </header>
+
+    <div class="container">
+        <!-- Tab Navigation -->
+        <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="users">Senarai Pengguna</button>
+            <button class="tab-btn" data-tab="roles">Role & Permission</button>
+            <button class="tab-btn" data-tab="logs">Log Aktiviti</button>
+        </div>
+
+        <!-- Tab 1: Senarai Pengguna -->
+        <div id="users" class="tab-content active">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Senarai Pengguna</h2>
+                    <button class="btn btn-primary" onclick="openAddUserModal()">+ Tambah Pengguna</button>
+                </div>
+                
+                <div class="search-bar" style="margin-bottom: 20px;">
+                    <input type="text" id="userSearch" placeholder="Cari pengguna..." class="form-control" 
+                           onkeyup="filterUsers()">
+                </div>
+                
+                <div class="table-responsive">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #F5F5F5;">
+                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #E0E0E0;">Nama</th>
+                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #E0E0E0;">Email</th>
+                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #E0E0E0;">Role</th>
+                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #E0E0E0;">Status</th>
+                                <th style="padding: 12px; text-align: left; border-bottom: 2px solid #E0E0E0;">Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Data pengguna akan dimuatkan di sini -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Role & Permission -->
+        <div id="roles" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Pengurusan Role & Permission</h2>
+                </div>
+                
+                <div class="permission-groups">
+                    <div class="permission-group">
+                        <h3 style="margin-bottom: 15px; color: #2E7D32;">Role: Admin</h3>
+                        <div class="permission-item">
+                            <span>Urus semua pengguna</span>
+                            <input type="checkbox" checked disabled>
+                        </div>
+                        <div class="permission-item">
+                            <span>Lihat semua kehadiran</span>
+                            <input type="checkbox" checked disabled>
+                        </div>
+                        <div class="permission-item">
+                            <span>Ubah tetapan sistem</span>
+                            <input type="checkbox" checked disabled>
+                        </div>
+                    </div>
+                    
+                    <div class="permission-group">
+                        <h3 style="margin-bottom: 15px; color: #2E7D32;">Role: Imam</h3>
+                        <div class="permission-item">
+                            <span>Lihat kehadiran</span>
+                            <input type="checkbox" checked>
+                        </div>
+                        <div class="permission-item">
+                            <span>Urus waktu solat</span>
+                            <input type="checkbox" checked>
+                        </div>
+                        <div class="permission-item">
+                            <span>Hantar notifikasi</span>
+                            <input type="checkbox" checked>
+                        </div>
+                    </div>
+                    
+                    <div class="permission-group">
+                        <h3 style="margin-bottom: 15px; color: #2E7D32;">Role: AJK Surau</h3>
+                        <div class="permission-item">
+                            <span>Lihat kehadiran</span>
+                            <input type="checkbox" checked>
+                        </div>
+                        <div class="permission-item">
+                            <span>Urus pelajar</span>
+                            <input type="checkbox" checked>
+                        </div>
+                        <div class="permission-item">
+                            <span>Jana laporan</span>
+                            <input type="checkbox" checked>
+                        </div>
+                    </div>
+                    
+                    <div class="permission-group">
+                        <h3 style="margin-bottom: 15px; color: #2E7D32;">Role: Pengguna Biasa</h3>
+                        <div class="permission-item">
+                            <span>Lihat kehadiran sendiri</span>
+                            <input type="checkbox" checked>
+                        </div>
+                        <div class="permission-item">
+                            <span>Ubah profil sendiri</span>
+                            <input type="checkbox" checked>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" style="margin-top: 20px;">Simpan Permission</button>
+            </div>
+        </div>
+
+        <!-- Tab 3: Log Aktiviti -->
+        <div id="logs" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Log Aktiviti Pengguna</h2>
+                    <button class="btn btn-secondary" onclick="exportLogs()">📥 Eksport Log</button>
+                </div>
+                
+                <div class="filter-bar" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <input type="date" id="logDate" class="form-control" style="flex: 1; min-width: 150px;">
+                    <select id="logUser" class="form-control" style="flex: 1; min-width: 150px;">
+                        <option value="">Semua Pengguna</option>
+                    </select>
+                    <select id="logAction" class="form-control" style="flex: 1; min-width: 150px;">
+                        <option value="">Semua Tindakan</option>
+                        <option value="login">Log Masuk</option>
+                        <option value="logout">Log Keluar</option>
+                        <option value="create">Buat</option>
+                        <option value="update">Kemaskini</option>
+                        <option value="delete">Padam</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="filterLogs()">🔍 Tapis</button>
+                </div>
+                
+                <div id="activityLogs" class="activity-list">
+                    <!-- Log aktiviti akan dimuatkan di sini -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tambah/Edit Pengguna -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Tambah Pengguna Baru</h2>
+                <button class="close-modal" onclick="closeUserModal()">&times;</button>
+            </div>
+            
+            <form id="userForm">
+                <input type="hidden" id="editUserId">
+                
+                <div class="form-group">
+                    <label for="userName">Nama Penuh</label>
+                    <input type="text" id="userName" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="userEmail">Email</label>
+                    <input type="email" id="userEmail" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="userRole">Role</label>
+                    <select id="userRole" class="form-control" required>
+                        <option value="">Pilih Role</option>
+                        <option value="admin">Admin</option>
+                        <option value="imam">Imam</option>
+                        <option value="ajk">AJK Surau</option>
+                        <option value="user">Pengguna Biasa</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="userPhone">No. Telefon</label>
+                    <input type="tel" id="userPhone" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="userActive" checked>
+                        Akaun Aktif
+                    </label>
+                </div>
+                
+                <div class="form-actions" style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeUserModal()" style="flex: 1;">Batal</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 2;">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Reset Password -->
+    <div id="resetPasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Reset Kata Laluan</h2>
+                <button class="close-modal" onclick="closeResetPasswordModal()">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <p>Anda akan menetapkan semula kata laluan untuk:</p>
+                <p id="resetUserInfo" style="font-weight: bold; margin: 10px 0;"></p>
+                <p>Kata laluan baru akan dihantar ke email pengguna.</p>
+            </div>
+            
+            <div class="form-actions" style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="button" class="btn btn-secondary" onclick="closeResetPasswordModal()" style="flex: 1;">Batal</button>
+                <button type="button" class="btn btn-primary" onclick="confirmResetPassword()" style="flex: 1;">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/firebase.js"></script>
+    <script src="js/users.js"></script>
+</body>
+</html>

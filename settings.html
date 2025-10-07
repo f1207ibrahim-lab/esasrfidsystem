@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetapan - SurauTrack</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="assets/icon.png">
+    <style>
+        .settings-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .settings-section h2 {
+            color: #2E7D32;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #E8F5E9;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-info {
+            flex: 1;
+        }
+        
+        .setting-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .setting-desc {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .setting-control {
+            margin-left: 20px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: #2E7D32;
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+        
+        .backup-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .system-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .info-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #2E7D32;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .danger-zone {
+            border-left: 4px solid #D32F2F;
+        }
+        
+        .danger-zone h2 {
+            color: #D32F2F;
+            border-bottom-color: #FFEBEE;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="assets/logo.png" alt="SurauTrack" class="header-logo">
+            <h1>Tetapan Sistem</h1>
+        </div>
+        <nav>
+            <a href="index.html" class="nav-link">🏠 Utama</a>
+            <a href="attendance.html" class="nav-link">📊 Kehadiran</a>
+            <a href="settings.html" class="nav-link active">⚙️ Tetapan</a>
+            <a href="booking.html" class="nav-link">📅 Tempahan</a>
+            <a href="users.html" class="nav-link">👥 Pengguna</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Tetapan Umum -->
+        <div class="settings-section">
+            <h2>🔧 Tetapan Umum</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-title">Nama Surau</div>
+                    <div class="setting-desc">Nama rasmi surau/masjid untuk paparan sistem</div>
+                </div>
+                <div class="setting-control">
+                    <input type="text" id="surauName" class="form-control" placeholder="Masukkan nama surau" style="width: 250px;">
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-title">Alamat Surau</div>
+                    <div class="setting-desc">Alamat lengkap untuk tujuan rasmi</div>
+                </div>
+                <div class="setting-control">
+                    <textarea id="surauAddress" class="form-control" placeholder="Masukkan alamat surau" rows="3" style="width: 250px;"></textarea>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-title">No. Telefon Surau</div>
+                    <div class="setting-desc">Nombor telefon untuk dihubungi</div>
+                </div>
+                <div class="setting-control">
+                    <input type="tel" id="surauPhone" class="form-control" placeholder="Contoh: 03-1234567" style="width: 200px;">
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-title">Email Surau</div>
+                    <div class="setting-desc">Alamat email rasmi surau</div>
+                </div>
+                <div class="setting-control">
+                    <input type="email" id="surauEmail" class="form-control" placeholder="surau@example.com" style="width: 250px;">
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="settingsManager.saveGeneralSettings()">💾 Simpan Tetapan Umum</button>
+        </div>
+
+        <!-- Tetapan Kehadiran -->
+        <div class="settings-section">
+            <h2>📊 Tetapan Kehadiran</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-title">Pengesahan Lokasi Wajib</div>
+                    <div class="setting-desc">Pelajar mesti berada dalam kawasan surau untuk rekod kehadiran</div>
+                </div>
+                <div class="setting-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="locationVerification" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-title">Radius Pengesahan (meter)</div>
+                    <div class="setting-desc">Jarak maksimum dari surau untuk pengesahan lokasi</div>
+                </div>
+                <div class="setting-control">
+                    <input type="range" id="geofenceRadius" min="10" max="200" value="50" style="width: 150px;">
+                    <span id="radiusValue" style="margin-left: 10px; font-weight: 500;">50m</span>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-title">Auto-logout Selepas Imbasan</div>
+                    <div class="setting-desc">Log keluar pelajar selepas 5 minit tidak aktif</div>
+                </div>
+                <div class="setting-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="autoLogout" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-title">Bunyi Imbasan Berjaya</div>
+                    <div class="setting-desc">Mainkan bunyi apabila kad RFID berjaya diimbas</div>
+                </div>
+                <div class="setting-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="scanSound" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="settingsManager.saveAttendanceSettings()">💾 Simpan Tetapan Kehadiran</button>
+        </div>
+
+        <!-- Tetapan Notifikasi -->
+        <div class="settings-section">
+            <h2>🔔 Tetapan Notifikasi</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-title">Notifikasi Email</div>
+                    <div class="setting-desc">Hantar notifikasi melalui email</div>
+                </div>
+                <div class="setting-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="emailNotifications" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-title">Notifikasi Telegram</div>
+                    <div class="setting-desc">Hantar notifikasi melalui Telegram Bot</div>
+                </div>
+                <div class="setting-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="telegramNotifications">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div id="telegramSettings" style="display: none; margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                <div class="form-group">
+                    <label for="telegramBotToken">Token Bot Telegram</label>
+                    <input type="text" id="telegramBotToken" class="form-control" placeholder="Masukkan token bot Telegram">
+                </div>
+                <div class="form-group">
+                    <label for="telegramChatId">ID Chat/Group</label>
+                    <input type="text" id="telegramChatId" class="form-control" placeholder="Masukkan ID chat Telegram">
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-title">Peringatan Waktu Solat</div>
+                    <div class="setting-desc">Hantar notifikasi sebelum waktu solat</div>
+                </div>
+                <div class="setting-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="prayerReminders" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-title">Masa Peringatan (minit)</div>
+                    <div class="setting-desc">Berapa minit sebelum waktu solat untuk hantar notifikasi</div>
+                </div>
+                <div class="setting-control">
+                    <input type="number" id="reminderTime" class="form-control" value="15" min="5" max="60" style="width: 100px;">
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="settingsManager.saveNotificationSettings()">💾 Simpan Tetapan Notifikasi</button>
+        </div>
+
+        <!-- Backup & Pemulihan -->
+        <div class="settings-section">
+            <h2>💾 Backup & Pemulihan</h2>
+            
+            <div class="backup-actions">
+                <button class="btn btn-secondary" onclick="settingsManager.exportData()">
+                    📥 Export Semua Data
+                </button>
+                <button class="btn btn-secondary" onclick="settingsManager.importData()">
+                    📤 Import Data
+                </button>
+                <button class="btn btn-secondary" onclick="settingsManager.backupToCloud()">
+                    ☁️ Backup ke Cloud
+                </button>
+                <button class="btn btn-secondary" onclick="settingsManager.restoreFromBackup()">
+                    🔄 Pulih dari Backup
+                </button>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-title">Auto Backup Harian</div>
+                        <div class="setting-desc">Backup data secara automatik setiap hari</div>
+                    </div>
+                    <div class="setting-control">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="autoBackup">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-title">Masa Auto Backup</div>
+                        <div class="setting-desc">Masa untuk backup automatik</div>
+                    </div>
+                    <div class="setting-control">
+                        <input type="time" id="backupTime" class="form-control" value="02:00" style="width: 150px;">
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="settingsManager.saveBackupSettings()">💾 Simpan Tetapan Backup</button>
+        </div>
+
+        <!-- Maklumat Sistem -->
+        <div class="settings-section">
+            <h2>ℹ️ Maklumat Sistem</h2>
+            
+            <div class="system-info">
+                <div class="info-card">
+                    <div class="info-label">Versi Sistem</div>
+                    <div class="info-value" id="systemVersion">v2.1.0</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-label">Tarikh Build</div>
+                    <div class="info-value" id="buildDate">15 Mac 2024</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-label">Jumlah Pengguna</div>
+                    <div class="info-value" id="totalUsers">0</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-label">Rekod Kehadiran</div>
+                    <div class="info-value" id="totalAttendance">0</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-label">Tempahan Aktif</div>
+                    <div class="info-value" id="activeBookings">0</div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-label">Status Database</div>
+                    <div class="info-value" id="databaseStatus">Local Storage</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px; text-align: center;">
+                <button class="btn btn-info" onclick="settingsManager.refreshSystemInfo()">
+                    🔄 Segar Semula Maklumat
+                </button>
+                <button class="btn btn-secondary" onclick="settingsManager.systemDiagnostics()">
+                    🛠️ Diagnostik Sistem
+                </button>
+            </div>
+        </div>
+
+        <!-- Zon Bahaya -->
+        <div class="settings-section danger-zone">
+            <h2>⚠️ Zon Bahaya</h2>
+            
+            <div style="background: #FFEBEE; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h4 style="color: #D32F2F; margin-bottom: 10px;">⚠️ Awas: Tindakan Tidak Boleh Dipulihkan</h4>
+                <p style="color: #666; margin: 0;">Tindakan dalam bahagian ini akan memadam data secara kekal. Sila buat backup terlebih dahulu.</p>
+            </div>
+            
+            <div class="backup-actions">
+                <button class="btn btn-warning" onclick="settingsManager.clearAttendanceData()">
+                    🗑️ Kosongkan Data Kehadiran
+                </button>
+                <button class="btn btn-warning" onclick="settingsManager.clearBookingData()">
+                    🗑️ Kosongkan Data Tempahan
+                </button>
+                <button class="btn btn-danger" onclick="settingsManager.resetAllSettings()">
+                    🔄 Reset Semua Tetapan
+                </button>
+                <button class="btn btn-danger" onclick="settingsManager.factoryReset()">
+                    💀 Reset Kilang
+                </button>
+            </div>
+            
+            <div style="margin-top: 20px; text-align: center;">
+                <p style="color: #666; font-size: 12px;">
+                    Tindakan "Reset Kilang" akan memadam SEMUA data dan tetapan, dan memulangkan sistem kepada keadaan asal.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Import Data -->
+    <div id="importModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Import Data</h2>
+                <button class="close-modal" onclick="settingsManager.closeImportModal()">&times;</button>
+            </div>
+            <div style="padding: 20px;">
+                <div class="form-group">
+                    <label for="importFile">Pilih Fail Backup</label>
+                    <input type="file" id="importFile" class="form-control" accept=".json,.csv">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="overwriteData">
+                        Timpa data sedia ada
+                    </label>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-secondary" onclick="settingsManager.closeImportModal()" style="flex: 1;">Batal</button>
+                    <button class="btn btn-primary" onclick="settingsManager.processImport()" style="flex: 1;">Import</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/firebase.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>

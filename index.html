@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SurauTrack - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .demo-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .demo-buttons .btn {
+            margin: 5px;
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+        
+        .password-field {
+            position: relative;
+        }
+        
+        .show-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo-placeholder" style="
+                width: 80px; 
+                height: 80px; 
+                background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%); 
+                border-radius: 50%; 
+                margin: 0 auto 15px; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                color: white; 
+                font-size: 24px;
+            ">🕌</div>
+            <h1>ESAS PMJ</h1>
+            <p>Sistem Kehadiran Surau Berasaskan RFID</p>
+        </div>
+        
+        <div class="login-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="admin@surautrack.com" class="form-control">
+            </div>
+            
+            <div class="form-group password-field">
+                <label for="password">Kata Laluan</label>
+                <input type="password" id="password" placeholder="password123" class="form-control">
+                <button type="button" class="show-password" onclick="togglePassword()">👁️</button>
+            </div>
+            
+            <button id="loginBtn" class="btn btn-primary btn-block">Log Masuk</button>
+            
+            <div class="login-links">
+                <a href="#" id="forgotPassword">Lupa Kata Laluan?</a>
+            </div>
+        </div>
+        
+        <div class="demo-accounts">
+            <h3>Akaun Demo:</h3>
+            <p><strong>Admin:</strong> admin@surautrack.com | password123</p>
+            <p><strong>Warden:</strong> warden@surautrack.com | password123</p>
+            
+            <!-- Demo buttons will be added by JavaScript -->
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const showPasswordBtn = document.querySelector('.show-password');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                showPasswordBtn.textContent = '🔒';
+            } else {
+                passwordInput.type = 'password';
+                showPasswordBtn.textContent = '👁️';
+            }
+        }
+        
+        // Auto-fill for easier testing
+        document.addEventListener('DOMContentLoaded', function() {
+            // You can remove this in production
+            console.log('SurauTrack Login Ready');
+            console.log('Use admin@surautrack.com / password123 to login');
+        });
+    </script>
+</body>
+</html>
